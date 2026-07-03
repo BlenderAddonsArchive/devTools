@@ -13,6 +13,8 @@ class DEV_OT_install_pip_module(bpy.types.Operator):
 
     module_name : bpy.props.StringProperty(name='Module Name')
 
+    use_local_module : bpy.props.BoolProperty(name='Set To Local Blender Modules', default=False)
+
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
     
@@ -23,13 +25,17 @@ class DEV_OT_install_pip_module(bpy.types.Operator):
         row = layout.row(align=True)
         row.operator('wm.url_open', text='Search on Pypi',icon='VIEWZOOM').url = f'https://pypi.org/search/?q={self.module_name}'
         row.operator('wm.url_open', text='Open Pypi page').url = f'https://pypi.org/project/{self.module_name}'
+        
+        layout.separator()
+        layout.prop(self, 'use_local_module')
 
     def execute(self, context):
         if not self.module_name:
             self.report({'ERROR'}, 'Need to specify a module name')
             return {'CANCELLED'}
+
         self.report({'INFO'}, f'Installing {self.module_name}')
-        fn.install_pip_module(self.module_name)
+        fn.install_pip_module(self.module_name, local_module=self.use_local_module)
         return {"FINISHED"}
 
 def install_pip_module_menu(self, context):

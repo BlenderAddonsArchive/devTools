@@ -216,14 +216,23 @@ def set_file_in_text_editor(filepath, linum=None, context=None):
         with bpy.context.temp_override(area=text_editor):
             bpy.ops.text.move(type='LINE_BEGIN')
 
-def install_pip_module(module: str):
+def install_pip_module(module: str, local_module=False):
     # get path to blender python
     pybin = sys.executable
+    print(f'Using python: {pybin}')
+
     # ensure pip is installed
     cmd = [pybin, '-m', 'ensurepip']
     subprocess.call(cmd)
+    
     # install module
     cmd = [pybin, '-m', 'pip', 'install', module]
+    if local_module:
+        user_modules = Path(bpy.utils.user_resource('SCRIPTS')) / 'modules'
+        print(f'Using user modules folder as target directory:\n   {user_modules}')
+        if not user_modules.exists():
+            user_modules.mkdir()
+        cmd += ['--target', str(user_modules)]
     subprocess.call(cmd)
 
 ## Get source addon from idname

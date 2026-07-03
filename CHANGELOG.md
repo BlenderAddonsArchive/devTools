@@ -1,5 +1,9 @@
 # Changelog
 
+3.2.1 - 2026-07-03
+
+- added: checkbox to target user local `scripts/modules` folder when using `Help > Install Pip Module`
+
 3.2.0 - 2025-06-15
 
 - added: some GP console templates
